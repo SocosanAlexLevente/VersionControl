@@ -22,6 +22,21 @@ namespace Week06
             Ticks = context.Ticks.ToList();
             dataGridView1.DataSource = Ticks;
             CreatePortfolio();
+
+            //VaR kiszámítása
+            List<decimal> Nyereségek = new List<decimal>();
+            int intervallum = 30;
+            DateTime kezdőDátum = (from x in Ticks select x.TradingDay).Min();
+            DateTime záróDátum = new DateTime(2016, 12, 30);
+            TimeSpan z = záróDátum - kezdőDátum;
+            for (int i = 0; i < z.Days - intervallum; i++)
+            {
+                decimal ny = GetPortfolioValue(kezdőDátum.AddDays(i + intervallum)) - GetPortfolioValue(kezdőDátum.AddDays(i));
+                Nyereségek.Add(ny);
+                Console.WriteLine(i + " " + ny);
+            }
+            var nyereségekRendezve = (from x in Nyereségek orderby x select x).ToList();
+            MessageBox.Show(nyereségekRendezve[nyereségekRendezve.Count() / 5].ToString());
         }
         private void CreatePortfolio()
         {
