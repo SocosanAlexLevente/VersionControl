@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Week06.Entities;
+using System.IO;
 
 namespace Week06
 {
@@ -37,6 +38,8 @@ namespace Week06
             }
             var nyereségekRendezve = (from x in Nyereségek orderby x select x).ToList();
             MessageBox.Show(nyereségekRendezve[nyereségekRendezve.Count() / 5].ToString());
+
+            WritetoFile(nyereségekRendezve);
         }
         private void CreatePortfolio()
         {
@@ -58,6 +61,22 @@ namespace Week06
                 value += (decimal)last.Price * item.Volume;
             }
             return value;
+        }
+        private void WritetoFile(List<decimal> nyereségekRendezve)
+        {
+            SaveFileDialog sd = new SaveFileDialog();
+            sd.Filter = ("CSV|.csv");
+            if (sd.ShowDialog() == DialogResult.OK)
+            {
+                using (StreamWriter sw = new StreamWriter(sd.FileName, false, Encoding.UTF8))
+                {
+                    sw.WriteLine("Időszak" + "," + "Nyereség");
+                    for (int i = 0; i < nyereségekRendezve.Count(); i++)
+                    {
+                        sw.WriteLine(i + "," + nyereségekRendezve[i].ToString().Replace(",","."));
+                    }
+                }
+            }
         }
     }
 }
