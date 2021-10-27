@@ -11,16 +11,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
+using System.IO;
 
 namespace Soap
 {
     public partial class Form1 : Form
     {
         BindingList<RateDate> Rates = new BindingList<RateDate>();
+        BindingList<string> Currencies = new BindingList<string>();
         public Form1()
         {
             InitializeComponent();
+            GetCurrencies();
             RefreshData();
+            comboBox1.DataSource = Currencies;
         }
         private void Webszolghívása()
         {
@@ -49,6 +53,10 @@ namespace Soap
                 rd.Date = DateTime.Parse(item.GetAttribute("date"));
 
                 var childElement = (XmlElement)item.ChildNodes[0];
+                if (childElement == null)
+                {
+                    continue;
+                }
                 rd.Currency = childElement.GetAttribute("curr");
 
                 var unit = decimal.Parse(childElement.GetAttribute("unit"));
@@ -98,6 +106,36 @@ namespace Soap
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshData();
+        }
+        private void GetCurrencies()
+        {
+            var mnbService = new MNBArfolyamServiceSoapClient();
+
+            GetCurrenciesRequestBody request = new GetCurrenciesRequestBody();
+
+            var response = mnbService.GetCurrencies(request);
+            var result = response.GetCurrenciesResult;
+
+            //SaveFileDialog sd = new SaveFileDialog();
+            //if (sd.ShowDialog() == DialogResult.OK)
+            //{
+            //    using (StreamWriter sw = new StreamWriter(sd.FileName))
+            //    {
+            //        sw.Write(result);
+            //    }
+            //}
+
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(result);
+
+            foreach (XmlElement item in xml.DocumentElement)
+            {
+                foreach (XmlElement ájtem in item.ChildNodes)
+                {
+                    //MessageBox.Show(ájtem.InnerText);
+                    Currencies.Add(ájtem.InnerText);
+                }
+            }
         }
     }
 }
