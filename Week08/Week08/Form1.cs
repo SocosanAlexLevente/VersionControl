@@ -8,14 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Week08.Entities;
+using Week08.Abstractions;
 
 namespace Week08
 {
     public partial class Form1 : Form
     {
-        List<Ball> _balls = new List<Ball>();
-        private BallFactory _factory;
-        public BallFactory Factory
+        List<Toy> _toys = new List<Toy>();
+        private IToyFactory _factory;
+        public IToyFactory Factory
         {
             get { return _factory; }
             set { _factory = value; }
@@ -28,28 +29,28 @@ namespace Week08
 
         private void createTimer_Tick(object sender, EventArgs e)
         {
-            var ball = Factory.CreateNew();
-            _balls.Add(ball);
-            mainPanel.Controls.Add(ball);
-            ball.Left = ball.Width * (-1);
+            var toy = Factory.CreateNew();
+            _toys.Add(toy);
+            mainPanel.Controls.Add(toy);
+            toy.Left = toy.Width * (-1);
         }
 
         private void conveyorTimer_Tick(object sender, EventArgs e)
         {
             var maxPosition = 0;
-            foreach (var item in _balls)
+            foreach (var item in _toys)
             {
-                item.MoveBall();
+                item.MoveToy();
                 if (item.Left > maxPosition)
                 {
                     maxPosition = item.Left;
                 }
-                if (maxPosition == 1000)
-                {
-                    var oldestBall = _balls[0];
-                    mainPanel.Controls.Remove(oldestBall);
-                    _balls.Remove(oldestBall);
-                }
+            }
+            if (maxPosition == 1000)
+            {
+                var oldestBall = _toys[0];
+                mainPanel.Controls.Remove(oldestBall);
+                _toys.Remove(oldestBall);
             }
         }
     }
