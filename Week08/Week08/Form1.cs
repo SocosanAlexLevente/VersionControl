@@ -97,5 +97,44 @@ namespace Week08
                 button3.BackColor = cd.Color;
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Factory = new PresentFactory()
+            {
+                ribbon = button5.BackColor,
+                box = button6.BackColor
+            };
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            ColorDialog cd = new ColorDialog();
+            cd.Color = button5.BackColor;
+            if (cd.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            else
+            {
+                button5.BackColor = cd.Color;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            ColorDialog cd = new ColorDialog();
+            cd.Color = button6.BackColor;
+            if (cd.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            else
+            {
+                button6.BackColor = cd.Color;
+            }
+        }
     }
 }
