@@ -24,6 +24,22 @@ namespace Week09
             Population = Beolvas_nep(@"c:/Temp/nép.csv");
             BirthProbabilities = Beolvas_szuletes(@"c:/Temp/születés.csv");
             DeathProbabilities = Beolvas_halal(@"c:/Temp/halál.csv");
+
+            for (int year = 2005; year < 2024; year++)
+            {
+                for (int i = 0; i < Population.Count; i++)
+                {
+
+                }
+
+                int nbrOfMales = (from x in Population
+                                  where x.Gender == Gender.Male && x.IsAlive == true
+                                  select x).Count();
+                int nbrOfFemales = (from x in Population
+                                    where x.Gender == Gender.Female && x.IsAlive == true
+                                    select x).Count();
+                Console.WriteLine("Év:{0} Fiuk{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales);
+            }
         }
         public List<Person> Beolvas_nep(string fajlnev)
         {
